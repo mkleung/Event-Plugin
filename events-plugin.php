@@ -13,16 +13,6 @@ Author URI: https://mikeleung.ca
 License: GPLV2 or later
 */
 
-
-// if (!defined('ABSPATH')) {
-// 	die("Invalid Resource");
-// }
-
-
-// or
-
-// defined('ABSPATH') or die();
-
 if (!function_exists('add_action')) {
 	echo "Invalid Resource";
 	exit;
@@ -34,6 +24,11 @@ class EventsPlugin {
 
 	function __construct() {
 		add_action('init', array($this, 'custom_post_type'));
+
+	}
+
+	function registerScripts(){
+		add_action('admin_enqueue_scripts', array($this, 'enqueue'));
 	}
 
 	function activate(){
@@ -52,11 +47,15 @@ class EventsPlugin {
 		register_post_type('event', ['public' => true, 'label' => 'Events']);
 	}
 
-	
+	function enqueue() {
+		wp_enqueue_style("mypluginstyle", plugins_url('/assets/style.css', __FILE__));
+		wp_enqueue_script("mypluginscript", plugins_url('/assets/script.js', __FILE__));
+	}
 }
 
 if (class_exists('EventsPlugin')) {
 	$eventsPlugin = new EventsPlugin();
+	$eventsPlugin->registerScripts();
 }
 
 // Activation
