@@ -32,17 +32,27 @@ if (!function_exists('add_action')) {
 
 class EventsPlugin {
 
-	function activate(){
+	function __construct() {
+		add_action('init', array($this, 'custom_post_type'));
+	}
 
+	function activate(){
+		flush_rewrite_rules();
 	}
 
 	function deactivate(){
-
+		flush_rewrite_rules();
 	}
 
 	function uninstall() {
 
 	}
+
+	function custom_post_type() {
+		register_post_type('event', ['public' => true, 'label' => 'Events']);
+	}
+
+	
 }
 
 if (class_exists('EventsPlugin')) {
