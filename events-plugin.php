@@ -58,7 +58,6 @@ class EventsPlugin {
 
 	}
 
-
 	function event_custom_post_type() {
 		register_post_type("event", array(
 			'labels' => array(
@@ -75,8 +74,6 @@ class EventsPlugin {
 
 		add_action( 'add_meta_boxes', 'event_date_meta_box' );
 		add_action('save_post', 'event_date_save_postdata');
-
-
 	}
 
 
@@ -89,7 +86,6 @@ class EventsPlugin {
 
 // https://developer.wordpress.org/plugins/metadata/custom-meta-boxes/
 function event_date_meta_box() {
-
     add_meta_box(
         'date_id',
         'Dates',
@@ -98,17 +94,19 @@ function event_date_meta_box() {
     );
 }
 
-
 function event_date_html_callback( $post ) {
 	$startDate = get_post_meta($post->ID, '_event_start_meta_key');
+	$endDate = get_post_meta($post->ID, '_event_end_meta_key');
 
 ?>
  <label for="event-start">Start Date</label>
  <input type="date" id="event-start" name="event-start" value="<?php echo $startDate[0];  ?>">
 
+ <label for="event-start">End Date</label>
+ <input type="date" id="event-end" name="event-end" value="<?php echo $endDate[0];  ?>">
+
 <?php
 }
-
 
 function event_date_save_postdata($post_id) {
     if (array_key_exists('event-start', $_POST)) {
@@ -119,8 +117,18 @@ function event_date_save_postdata($post_id) {
 	            $_POST['event-start']
 	        );
     	}
-
     }
+
+    if (array_key_exists('event-end', $_POST)) {
+    	if ($_POST['event-end'] != "") {
+	        update_post_meta(
+	            $post_id,
+	            '_event_end_meta_key',
+	            $_POST['event-end']
+	        );
+    	}
+    }
+
 }
 
 
@@ -152,8 +160,8 @@ function events_plugin_shortcode( $atts ) {
 			<?php while ( $query->have_posts() ) : $query->the_post(); ?>
 				<tr>
 			    	<td><?php the_title(); ?></td>
-			    	<td></td> 
-			    	<td></td>
+			    	<td><?php echo get_post_meta(get_the_id(), '_event_start_meta_key', true); ?></td> 
+			    	<td><?php echo get_post_meta(get_the_id(), '_event_end_meta_key', true);  ?></td>
 			  	</tr>
 			<?php endwhile; wp_reset_postdata(); ?>
 		</table>
