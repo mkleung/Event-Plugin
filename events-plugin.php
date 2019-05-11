@@ -59,11 +59,7 @@ class EventsPlugin {
 	}
 
 
-
-
 	function event_custom_post_type() {
-		//register_post_type('event', ['public' => true, 'label' => 'Events']);
-		
 		register_post_type("event", array(
 			'labels' => array(
 				'name' => 'All Events',
@@ -71,7 +67,6 @@ class EventsPlugin {
 			),
 			'description' => 'Events which will be displayed',
 			'public' => true,
-			//'supports' => array('title', 'editor', 'custom-fields'),
 			'register_meta_box_cb' => 'event_date_meta_box'
 
 		));
@@ -110,8 +105,7 @@ function event_date_html_callback( $post ) {
 ?>
  <label for="event-start">Start Date</label>
  <input type="date" id="event-start" name="event-start" value="<?php echo $startDate[0];  ?>">
- <!--<label for="wporg_field">End Date</label>
- <input type="date" id="end-date" name="date-end" value="2019-05-12">-->
+
 <?php
 }
 
@@ -129,3 +123,43 @@ function event_date_save_postdata($post_id) {
     }
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| Shortcode
+|--------------------------------------------------------------------------
+|*/
+
+add_shortcode( 'list-events', 'events_plugin_shortcode' );
+function events_plugin_shortcode( $atts ) {
+    ob_start();
+    $query = new WP_Query( array(
+        'post_type' => 'event',
+        'posts_per_page' => -1,
+        'order' => 'ASC',
+        'orderby' => 'title',
+
+    ) );
+    if ( $query->have_posts() ) { ?>
+
+		<table style="width:100%">
+			<tr>
+				<th>Title</th>
+				<th>Start Date</th> 
+				<th>End Date</th>
+			</tr>
+		  
+			<?php while ( $query->have_posts() ) : $query->the_post(); ?>
+				<tr>
+			    	<td><?php the_title(); ?></td>
+			    	<td></td> 
+			    	<td></td>
+			  	</tr>
+			<?php endwhile; wp_reset_postdata(); ?>
+		</table>
+
+	<?php 
+		$myvariable = ob_get_clean();
+    		return $myvariable;
+    	}
+}

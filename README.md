@@ -1,2 +1,4 @@
-### WordPress Developer Test
+### WordPress Event Plugin
+
+This is a test.
 
