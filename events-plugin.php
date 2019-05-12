@@ -6,7 +6,7 @@
 /*
 Plugin Name: Events Plugin
 Plugin URI: 
-Description:<h1>WordPress Developer Test</h1> Please create a simple plugin that registers a custom post (ex. Events), a corresponding category (ex. Event Types), registers a metabox with a couple fields (ex. Start Date and End Date). The plugin should also create a shortcode that can be used to display a listing of all the posts of the created post type.
+Description: This plugin creates a custom post (ex. Events), a corresponding category (ex. Event Types), registers a metabox with a couple fields (ex. Start Date and End Date). The plugin should also create a shortcode that can be used to display a listing of all the posts of the created post type.
 Vesion: 1.0.0
 Author: Michael Leung
 Author URI: https://mikeleung.ca
@@ -61,12 +61,24 @@ class EventsPlugin {
 	function event_custom_post_type() {
 		register_post_type("event", array(
 			'labels' => array(
-				'name' => 'All Events',
+				'name' => 'Events',
 				'singular_name' => 'Event',
+				'menu_name' => __( 'Events' ),
+				'all_items' => __( 'All Events'),
+				'add_new_item' => __('Add New Event'),
+				'new_item'  => __( 'New Event'),
+				'edit_item' => __( 'Edit Event' ),
+				'view_item' => __( 'View Event' ),
+				'not_found'          => __( 'No events found.' ),
+				'not_found_in_trash' => __( 'No events found in Trash.' )
+
 			),
+			'menu_icon' => 'dashicons-calendar-alt',
 			'description' => 'Events which will be displayed',
 			'public' => true,
-			'register_meta_box_cb' => 'event_date_meta_box'
+			'register_meta_box_cb' => 'event_date_meta_box',
+			'capability_type'    => 'post',
+			'supports'           => array( 'title', 'editor', 'thumbnail' )
 
 		));
 
@@ -134,7 +146,7 @@ function event_date_save_postdata($post_id) {
 
 /*
 |--------------------------------------------------------------------------
-| Shortcode
+| Enable Shortcode Feature
 |--------------------------------------------------------------------------
 |*/
 
@@ -171,3 +183,25 @@ function events_plugin_shortcode( $atts ) {
     		return $myvariable;
     	}
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Add Shortcode Custom Button
+|--------------------------------------------------------------------------
+|*/
+
+
+function my_custom_format_script_register() {
+    wp_register_script(
+        'my-custom-format-js',
+        plugins_url( 'assets/script.js', __FILE__ ),
+        array( 'wp-rich-text' )
+    );
+}
+add_action( 'init', 'my_custom_format_script_register' );
+
+function my_custom_format_enqueue_assets_editor() {
+    wp_enqueue_script( 'my-custom-format-js' );
+}
+add_action( 'enqueue_block_editor_assets', 'my_custom_format_enqueue_assets_editor' );
