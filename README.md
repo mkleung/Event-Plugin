@@ -19,17 +19,12 @@ Please create a simple plugin that registers a custom post (ex. Events), a corre
 
 * Download the zip file into a local folder
 * From your WordPress dashboard, visit plugins > Upload Plugin
-* You're done!
+* To use , click on the events tab on the left and add new event
+* Go to a post and add a block and enter [list-events] shortcode
 
 Requires at least: 4.9.8
 Tested up to: 5.1.2
 Gutenberg compatible: yes
-
-
-### Usage Instructions
-
-* Click on the events tab on the left and add new event
-* Use the shortcode [list-events]
 
 
 ### Any decisions you made that weren't straightforward
