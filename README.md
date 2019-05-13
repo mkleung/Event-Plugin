@@ -31,18 +31,17 @@ Gutenberg compatible: yes
 
 ### Any decisions you made that weren't straightforward
 
-- I wasn't totally sure how the user will enter the shortcode on the gutenberg editor
-- Usually in the old editor, I would create a custom button on the tiny mce editor and the
-user just has to click on the button and the shortcode will be automatically added.
+None
 
 ### Any unforeseen issues you encountered
 
-- Creating shortcode buttons on the previous TinyMCE editor used to be straightforward but with the new Gutenburg editor, it is more challenging to add a button that adds the shortcode automatically.
+- Under the old editor, I am able to quickly create a custom button on the editor which allows the user to quickly add shortcodes automatically. The new Gutenburg block editor makes this hard. 
 
 ### Any items left unfinished, and/or a wishlist for improvements
 
-Wishlists
-- [ ] Add a button to the Gutenburg editor that when clicked, will add the shortcode automatically. Currently user has to add shortcode block and type in "list-events" shortcode manually
+**Wishlists**
+- [ ] Add a button into the Gutenburg editor that when clicked, will add the shortcode automatically. Currently user has to add a block and type in the shortcode manually
 - [x] Save date entered into metabox as unix timestamp instead of string (to enable sorting)
 - [ ] Add validation for date end (End date must be after start day)
-- [ ] Add feature where deleting the plugin will delete all metavalues and posts related to the Events plugin
+- [ ] Add a feature where deleting the whole plugin will delete all the metavalues and posts related to the Events plugin
+- [ ] Add attributes to the shortcode like sortby
