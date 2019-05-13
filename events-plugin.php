@@ -90,8 +90,10 @@ class EventsPlugin {
 
 
 	function enqueue() {
-		wp_enqueue_style("mypluginstyle", plugins_url('/assets/style.css', __FILE__));
-		wp_enqueue_script("mypluginscript", plugins_url('/assets/script.js', __FILE__));
+		wp_enqueue_style("eventpluginstyle", plugins_url('/assets/style.css', __FILE__));
+		wp_enqueue_script("eventpluginscript",
+		plugins_url('/assets/script.js', __FILE__),
+		[ 'wp-editor', 'wp-i18n', 'wp-element', 'wp-compose', 'wp-components' ]);
 		
 	}
 }
@@ -106,27 +108,50 @@ function event_date_meta_box() {
     );
 }
 
+
 function event_date_html_callback( $post ) {
-	$startDate = get_post_meta($post->ID, '_event_start_meta_key');
-	$endDate = get_post_meta($post->ID, '_event_end_meta_key');
+
+
+	$startDate = get_post_meta($post->ID, '_event_start_meta_key')[0];
+	$endDate = get_post_meta($post->ID, '_event_end_meta_key')[0];
+
+	if (empty($startDate)) {
+		$formattedStart = "YYYY-MM-DD";
+	}
+	else {
+		$startDisplaydate = new DateTime("@$startDate");
+		$formattedStart = $startDisplaydate->format('Y-m-d');
+	}
+
+	if (empty($endDate)) {
+		$formattedEnd = "YYYY-MM-DD";
+	}
+	else {
+		$endDisplaydate = new DateTime("@$endDate");
+		$formattedEnd = $endDisplaydate->format('Y-m-d');
+	}
+
 
 ?>
  <label for="event-start">Start Date</label>
- <input type="date" id="event-start" name="event-start" value="<?php echo $startDate[0];  ?>">
+ <input type="date" id="event-start" name="event-start" value="<?php echo $formattedStart;  ?>">
 
  <label for="event-start">End Date</label>
- <input type="date" id="event-end" name="event-end" value="<?php echo $endDate[0];  ?>">
+ <input type="date" id="event-end" name="event-end" value="<?php echo $formattedEnd; ?>">
 
 <?php
 }
 
+// Save date into database
 function event_date_save_postdata($post_id) {
+
+
     if (array_key_exists('event-start', $_POST)) {
     	if ($_POST['event-start'] != "") {
 	        update_post_meta(
 	            $post_id,
 	            '_event_start_meta_key',
-	            $_POST['event-start']
+	            strtotime($_POST['event-start'])
 	        );
     	}
     }
@@ -136,7 +161,7 @@ function event_date_save_postdata($post_id) {
 	        update_post_meta(
 	            $post_id,
 	            '_event_end_meta_key',
-	            $_POST['event-end']
+	            strtotime($_POST['event-end'])
 	        );
     	}
     }
@@ -170,10 +195,35 @@ function events_plugin_shortcode( $atts ) {
 			</tr>
 		  
 			<?php while ( $query->have_posts() ) : $query->the_post(); ?>
+				<?php 
+
+				$startDate = get_post_meta(get_the_id(), '_event_start_meta_key', true);
+				$endDate = get_post_meta(get_the_id(), '_event_end_meta_key', true);
+
+
+				if (empty($startDate)) {
+					$formattedStart = "";
+				}
+				else {
+					$startDisplaydate = new DateTime("@$startDate");
+					$formattedStart = $startDisplaydate->format('Y-m-d');
+				}
+
+
+				if (empty($endDate)) {
+					$formattedEnd = "";
+				}
+				else {
+					$endDisplaydate = new DateTime("@$endDate");
+					$formattedEnd = $endDisplaydate->format('Y-m-d');
+				}
+
+
+				?>
 				<tr>
 			    	<td><?php the_title(); ?></td>
-			    	<td><?php echo get_post_meta(get_the_id(), '_event_start_meta_key', true); ?></td> 
-			    	<td><?php echo get_post_meta(get_the_id(), '_event_end_meta_key', true);  ?></td>
+			    	<td><?php echo $formattedStart; ?></td> 
+			    	<td><?php echo $formattedEnd; ?></td>
 			  	</tr>
 			<?php endwhile; wp_reset_postdata(); ?>
 		</table>
@@ -183,25 +233,3 @@ function events_plugin_shortcode( $atts ) {
     		return $myvariable;
     	}
 }
-
-
-/*
-|--------------------------------------------------------------------------
-| Add Shortcode Custom Button
-|--------------------------------------------------------------------------
-|*/
-
-
-function my_custom_format_script_register() {
-    wp_register_script(
-        'my-custom-format-js',
-        plugins_url( 'assets/script.js', __FILE__ ),
-        array( 'wp-rich-text' )
-    );
-}
-add_action( 'init', 'my_custom_format_script_register' );
-
-function my_custom_format_enqueue_assets_editor() {
-    wp_enqueue_script( 'my-custom-format-js' );
-}
-add_action( 'enqueue_block_editor_assets', 'my_custom_format_enqueue_assets_editor' );
