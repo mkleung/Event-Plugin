@@ -9,7 +9,10 @@ Please create a simple plugin that registers a custom post (ex. Events), a corre
 - [x] Create Metabox for start and end date
 - [x] Shortcode [list-events] that lists all events
 
-<img src="assets/plugin.PNG" alt="drawing" width="200"/>
+
+<img src="assets/Capture.PNG" alt="drawing" width="300"/>
+
+<img src="assets/plugin.PNG" alt="drawing" width="300"/>
 
 
 ### Installation Instructions
@@ -41,6 +44,8 @@ user just has to click on the button and the shortcode will be automatically add
 
 ### Any items left unfinished, and/or a wishlist for improvements
 
+Wishlists
 - [ ] Add a button to the Gutenburg editor that when clicked, will add the shortcode automatically. Currently user has to add shortcode block and type in "list-events" shortcode manually
 - [x] Save date entered into metabox as unix timestamp instead of string (to enable sorting)
 - [ ] Add validation for date end (End date must be after start day)
+- [ ] Add feature where deleting the plugin will delete all metavalues and posts related to the Events plugin
