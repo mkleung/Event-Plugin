@@ -19,7 +19,9 @@ Please create a simple plugin that registers a custom post (ex. Events), a corre
 
 * Download the zip file into a local folder
 * From your WordPress dashboard, visit plugins > Upload Plugin
-* To use , click on the events tab on the left and add new event
+* Click install
+* To add an event, click on the events tab on the left and add new event
+* Add start date and end date under the content box
 * Go to a post and add a block and enter [list-events] shortcode
 
 Requires at least: 4.9.8
